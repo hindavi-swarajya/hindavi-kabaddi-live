@@ -61,7 +61,6 @@ hr{border:0;border-top:1px solid #e5eaf0;margin:15px 0}
   <button data-tab="fixtures">📅 Fixtures</button>
   <button data-tab="points">🏆 Points Table</button>
   <button data-tab="leaders">⭐ Top Players</button>
-  <button data-tab="admin">⚙️ Admin</button>
 </nav>
 
 <main>
@@ -279,8 +278,7 @@ function goTab(id){
   document.querySelectorAll("main section").forEach(s=>s.classList.toggle("active",s.id===id));
   document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));
 }
-document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.tab!=="admin"||isAdmin)goTab(b.dataset.tab);}));
-
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>goTab(b.dataset.tab)));
 document.getElementById("teamForm").addEventListener("submit",e=>{
   e.preventDefault();
   const name=document.getElementById("teamName").value.trim();
@@ -562,8 +560,7 @@ function setAuthMessage(message){
   if(el)el.textContent=message;
 }
 function updateAdminVisibility(){
-  const adminNav=document.querySelector('nav button[data-tab="admin"]');
-  if(adminNav)adminNav.style.display=isAdmin?"inline-block":"none";
+  
   const logout=document.getElementById("logoutBtn");
   if(logout)logout.style.display=isAdmin?"inline-block":"none";
   if(!isAdmin && document.getElementById("admin").classList.contains("active"))goTab("live");
