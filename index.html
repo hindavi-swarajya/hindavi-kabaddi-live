@@ -1,1 +1,603 @@
 
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>हिंदवी स्वराज्य | कबड्डी Live Score</title>
+<style>
+:root {
+  --navy:#10243b;
+  --blue:#183f60;
+  --orange:#f5a623;
+  --bg:#f2f5f9;
+  --white:#fff;
+  --green:#18865b;
+  --red:#d63e45;
+  --text:#192b3b;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family:Arial,"Noto Sans Devanagari",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+header {
+  background:linear-gradient(135deg,var(--navy),var(--blue));
+  color:white;
+  padding:25px 15px 20px;
+  text-align:center;
+  border-bottom:5px solid var(--orange);
+}
+.logo { font-size:32px; margin-bottom:8px; }
+header h1 { font-size:23px; margin:5px 0; }
+header p { margin:8px 0 0; color:#d8e6f1; font-size:13px; }
+nav {
+  display:flex;
+  background:white;
+  position:sticky;
+  top:0;
+  z-index:5;
+  box-shadow:0 3px 12px #00000010;
+}
+nav button {
+  flex:1;
+  border:0;
+  background:white;
+  padding:14px 3px;
+  font-weight:bold;
+  color:#526579;
+  cursor:pointer;
+  font-size:12px;
+  border-bottom:3px solid transparent;
+}
+nav button.active {
+  color:var(--blue);
+  border-bottom-color:var(--orange);
+}
+main { max-width:900px; margin:auto; padding:15px; }
+.section { display:none; }
+.section.active { display:block; }
+.card {
+  background:white;
+  border-radius:14px;
+  padding:17px;
+  margin-bottom:15px;
+  box-shadow:0 3px 14px #14283c0a;
+}
+h2 { font-size:19px; margin:0 0 15px; }
+h3 { font-size:15px; margin:8px 0; }
+.muted { color:#6b7b8c; font-size:12px; }
+.live-tag {
+  display:inline-block;
+  color:white;
+  background:var(--red);
+  border-radius:5px;
+  padding:5px 9px;
+  font-size:11px;
+  font-weight:bold;
+}
+.scoreboard {
+  background:linear-gradient(135deg,#10243b,#1d4c70);
+  color:white;
+  border-radius:16px;
+  padding:20px 12px;
+  text-align:center;
+}
+.teams {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  align-items:center;
+}
+.team-name { font-size:15px; font-weight:bold; }
+.score { font-size:49px; font-weight:bold; margin:12px 0; }
+.vs { color:#c7d5e2; font-size:12px; }
+.period { color:#e8b75d; font-size:12px; margin-bottom:12px; }
+.btn {
+  border:0;
+  border-radius:8px;
+  padding:11px 14px;
+  cursor:pointer;
+  font-weight:bold;
+  font-size:13px;
+}
+.primary { background:var(--blue); color:white; }
+.orange { background:var(--orange); color:#182b3d; }
+.light { background:#eaf0f6; color:var(--blue); }
+.danger { background:#ffe9e9; color:#b82f38; }
+.btn-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+.field {
+  width:100%;
+  padding:11px;
+  border:1px solid #d5dfe8;
+  border-radius:8px;
+  background:white;
+  font-size:14px;
+  margin:5px 0 12px;
+}
+label { font-size:12px; font-weight:bold; display:block; }
+table { width:100%; border-collapse:collapse; font-size:12px; }
+th { background:var(--navy); color:white; }
+th,td { padding:11px 6px; text-align:center; border-bottom:1px solid #e5eaf0; }
+tr:nth-child(even) td { background:#f8fafc; }
+.table-wrap { overflow-x:auto; }
+.match {
+  display:grid;
+  grid-template-columns:48px 1fr auto;
+  gap:10px;
+  align-items:center;
+  border-bottom:1px solid #e8edf2;
+  padding:13px 0;
+}
+.match:last-child { border-bottom:0; }
+.match-no {
+  background:#edf2f8;
+  border-radius:8px;
+  padding:10px 3px;
+  text-align:center;
+  font-weight:bold;
+  color:var(--blue);
+}
+.match-info { font-size:13px; line-height:1.7; }
+.result { font-weight:bold; color:var(--green); font-size:12px; }
+.small-btn { padding:8px; font-size:11px; }
+.pill {
+  background:#e9f1f8;
+  color:var(--blue);
+  border-radius:20px;
+  padding:5px 9px;
+  font-size:11px;
+  display:inline-block;
+  margin:2px;
+}
+.notice {
+  padding:12px;
+  background:#fff5dc;
+  border-radius:9px;
+  font-size:12px;
+  line-height:1.7;
+  margin-bottom:14px;
+}
+footer {
+  text-align:center;
+  padding:25px 12px;
+  color:#758395;
+  font-size:11px;
+}
+@media(min-width:600px) {
+  nav button { font-size:14px; }
+  .team-name { font-size:19px; }
+  main { padding:22px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🏆</div>
+  <h1>हिंदवी स्वराज्य मंडळ</h1>
+  <h2 style="margin:8px 0;color:#f5a623">कबड्डी स्पर्धा २०२६</h2>
+  <p>LIVE SCORE • FIXTURES • POINTS TABLE</p>
+</header>
+
+<nav>
+  <button class="active" data-tab="live">🔴 Live Score</button>
+  <button data-tab="fixtures">📅 Fixtures</button>
+  <button data-tab="points">🏆 Points Table</button>
+  <button data-tab="admin">⚙️ Admin</button>
+</nav>
+
+<main>
+<section id="live" class="section active">
+  <div class="card">
+    <h2>🔴 Live Match Center</h2>
+    <p class="muted">सध्या निवडलेला सामना</p>
+    <div class="scoreboard">
+      <div id="liveStatus" class="live-tag">UPCOMING</div>
+      <div class="period" id="livePeriod">सामना सुरू झालेला नाही</div>
+      <div class="teams">
+        <div>
+          <div id="homeName" class="team-name">ग्रुप A - संघ १</div>
+          <div id="homeScore" class="score">0</div>
+        </div>
+        <div>
+          <div class="vs">VS</div>
+          <div id="awayScore" class="score">0</div>
+          <div id="awayName" class="team-name">ग्रुप A - संघ २</div>
+        </div>
+      </div>
+      <p id="liveTime" class="muted" style="color:#d8e6f1">सामना क्र. १</p>
+    </div>
+    <div class="btn-row">
+      <button class="btn light" onclick="changeTab('fixtures')">सर्व सामने पाहा</button>
+      <button class="btn light" onclick="changeTab('points')">गुणतालिका पाहा</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>👤 खेळाडूंची वैयक्तिक कामगिरी</h2>
+    <p class="muted">निवडलेल्या सामन्यातील खेळाडूंचे गुण</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>संघ</th><th>खेळाडू</th>
+          <th>Raid Pts</th><th>Tackle Pts</th><th>एकूण</th>
+        </tr></thead>
+        <tbody id="playerTable">
+          <tr><td colspan="5">अद्याप खेळाडूंची आकडेवारी उपलब्ध नाही.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="notice">
+    ℹ️ ही सध्या Demo वेबसाइट आहे. अधिकृत Live Score सुरू करण्यासाठी Admin Panel मधून माहिती भरा. खरे Real-Time Updates सुरू करण्यासाठी पुढील टप्प्यात Firebase जोडणे आवश्यक आहे.
+  </div>
+</section>
+
+<section id="fixtures" class="section">
+  <div class="card">
+    <h2>📅 Fixtures & Results</h2>
+    <p class="muted">१६ संघ • ४ ग्रुप • २४ ग्रुप सामने • ७ बाद फेरीचे सामने</p>
+    <div class="btn-row" id="filterButtons">
+      <button class="btn primary" onclick="filterMatches('ALL',this)">सर्व</button>
+      <button class="btn light" onclick="filterMatches('A',this)">ग्रुप A</button>
+      <button class="btn light" onclick="filterMatches('B',this)">ग्रुप B</button>
+      <button class="btn light" onclick="filterMatches('C',this)">ग्रुप C</button>
+      <button class="btn light" onclick="filterMatches('D',this)">ग्रुप D</button>
+      <button class="btn light" onclick="filterMatches('KNOCKOUT',this)">बाद फेरी</button>
+    </div>
+    <div id="matchList"></div>
+  </div>
+</section>
+
+<section id="points" class="section">
+  <div class="card">
+    <h2>🏆 Points Table</h2>
+    <div class="notice">
+      विजय = २ गुण • बरोबरी = १ गुण • पराभव = ० गुण.
+      फक्त पूर्ण झालेल्या ग्रुप सामन्यांचे गुण येथे मोजले जातील.
+    </div>
+    <div id="pointsTables"></div>
+  </div>
+</section>
+
+<section id="admin" class="section">
+  <div class="card">
+    <h2>⚙️ Demo Admin Panel</h2>
+    <div class="notice">
+      हा सुरक्षित Admin Login नाही. सध्या हा फक्त नमुना आहे आणि बदल या ब्राउझरमध्येच साठवले जातात. अधिकृत वापरापूर्वी Firebase Authentication व Database सुरक्षा जोडावी.
+    </div>
+
+    <label>सामना निवडा</label>
+    <select class="field" id="adminMatch"></select>
+
+    <label>सामन्याची स्थिती</label>
+    <select class="field" id="adminStatus">
+      <option value="UPCOMING">आगामी</option>
+      <option value="LIVE">Live सुरू</option>
+      <option value="COMPLETED">पूर्ण</option>
+    </select>
+
+    <label>हाफ / स्थिती</label>
+    <select class="field" id="adminPeriod">
+      <option>सामना सुरू झालेला नाही</option>
+      <option>पहिला हाफ</option>
+      <option>मध्यंतर</option>
+      <option>दुसरा हाफ</option>
+      <option>पूर्ण वेळ</option>
+    </select>
+
+    <div class="teams">
+      <div>
+        <label id="adminHomeLabel">पहिला संघाचे गुण</label>
+        <input class="field" id="adminHomeScore" type="number" min="0" value="0">
+      </div>
+      <div>
+        <label id="adminAwayLabel">दुसऱ्या संघाचे गुण</label>
+        <input class="field" id="adminAwayScore" type="number" min="0" value="0">
+      </div>
+    </div>
+
+    <label>खेळाडूंचे गुण (प्रत्येक ओळीत: खेळाडूचे नाव, संघ, Raid Points, Tackle Points)</label>
+    <p class="muted">उदाहरण: राहुल, A1, 6, 2</p>
+    <textarea class="field" id="adminPlayers" rows="5" placeholder="राहुल, A1, 6, 2&#10;अमोल, A2, 3, 4"></textarea>
+
+    <button class="btn orange" style="width:100%" onclick="saveMatch()">💾 Demo अपडेट सेव्ह करा</button>
+
+    <h3 style="margin-top:22px">संघांची नावे बदला</h3>
+    <p class="muted">प्रत्येक ओळीत संघाचा कोड आणि नाव: A1, पाटणे संघ</p>
+    <textarea class="field" id="teamNames" rows="6" placeholder="A1, पाटणे संघ"></textarea>
+    <button class="btn primary" style="width:100%" onclick="saveTeamNames()">संघांची नावे सेव्ह करा</button>
+
+    <div class="btn-row">
+      <button class="btn danger" onclick="resetDemo()">Demo डेटा पुन्हा सुरू करा</button>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  हिंदवी स्वराज्य मंडळ • कला | क्रीडा | संस्कृती<br>
+  कबड्डी स्पर्धा २०२६
+</footer>
+
+<script>
+const groups = {
+  A:["A1","A2","A3","A4"],
+  B:["B1","B2","B3","B4"],
+  C:["C1","C2","C3","C4"],
+  D:["D1","D2","D3","D4"]
+};
+
+const groupPairs = [
+  [0,3],[1,2],[0,2],[3,1],[0,1],[2,3]
+];
+
+const defaultTimes = [
+  "१२:३०","१२:४९","१:०८","१:२७",
+  "१:४६","२:०५","२:२४","२:४३",
+  "३:०२","३:२१","३:४०","३:५९",
+  "४:१८","४:३७","४:५६","५:१५",
+  "५:३४","५:५३","६:१२","६:३१",
+  "६:५०","७:०९","७:२८","७:४७"
+];
+
+function buildMatches() {
+  const list = [];
+  let id = 1;
+  for (let round=0; round<6; round++) {
+    for (const g of ["A","B","C","D"]) {
+      const pair = groupPairs[round];
+      list.push({
+        id:id++,
+        group:g,
+        a:groups[g][pair[0]],
+        b:groups[g][pair[1]],
+        time:defaultTimes[list.length],
+        status:"UPCOMING",
+        period:"सामना सुरू झालेला नाही",
+        sa:0,sb:0,players:[]
+      });
+    }
+  }
+  const ko = [
+    ["QF1","A1","B2","रात्री ८:२६"],
+    ["QF2","B1","A2","रात्री ८:४५"],
+    ["QF3","C1","D2","रात्री ९:०४"],
+    ["QF4","D1","C2","रात्री ९:२३"],
+    ["SF1","QF1 विजेता","QF2 विजेता","रात्री ९:५२"],
+    ["SF2","QF3 विजेता","QF4 विजेता","रात्री १०:११"],
+    ["FINAL","SF1 विजेता","SF2 विजेता","रात्री १०:४०"]
+  ];
+  ko.forEach((m,i)=>list.push({
+    id:25+i,group:"KNOCKOUT",round:m[0],
+    a:m[1],b:m[2],time:m[3],
+    status:"UPCOMING",period:"सामना सुरू झालेला नाही",
+    sa:0,sb:0,players:[]
+  }));
+  return list;
+}
+
+let matches = buildMatches();
+let names = {};
+Object.values(groups).flat().forEach(t=>names[t]=t+" संघ");
+let selectedId = 1;
+let activeFilter = "ALL";
+
+function name(code) {
+  return names[code] || code;
+}
+
+function changeTab(tab) {
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+  document.getElementById(tab).classList.add("active");
+  if(tab==="points") renderPoints();
+  if(tab==="fixtures") renderMatches();
+  if(tab==="admin") loadAdmin();
+}
+
+document.querySelectorAll("nav button").forEach(b=>{
+  b.addEventListener("click",()=>changeTab(b.dataset.tab));
+});
+
+function matchStatus(m) {
+  if(m.status==="LIVE") return '<span style="color:#d63e45;font-weight:bold">🔴 LIVE</span>';
+  if(m.status==="COMPLETED") return '<span class="result">पूर्ण</span>';
+  return '<span class="muted">आगामी</span>';
+}
+
+function renderLive() {
+  const m=matches.find(x=>x.id===selectedId) || matches[0];
+  document.getElementById("homeName").textContent=name(m.a);
+  document.getElementById("awayName").textContent=name(m.b);
+  document.getElementById("homeScore").textContent=m.sa;
+  document.getElementById("awayScore").textContent=m.sb;
+  document.getElementById("livePeriod").textContent=m.period;
+  document.getElementById("liveTime").textContent="सामना क्र. "+m.id+" • "+m.time;
+  document.getElementById("liveStatus").textContent=
+    m.status==="LIVE"?"LIVE":m.status==="COMPLETED"?"COMPLETED":"UPCOMING";
+  document.getElementById("liveStatus").style.background=
+    m.status==="LIVE"?"#d63e45":m.status==="COMPLETED"?"#18865b":"#657789";
+
+  const tbody=document.getElementById("playerTable");
+  if(!m.players.length) {
+    tbody.innerHTML='<tr><td colspan="5">अद्याप खेळाडूंची आकडेवारी उपलब्ध नाही.</td></tr>';
+  } else {
+    tbody.innerHTML=m.players.map(p=>
+      `<tr><td>${escapeHTML(name(p.team))}</td><td>${escapeHTML(p.name)}</td>
+      <td>${p.raid}</td><td>${p.tackle}</td><td>${p.raid+p.tackle}</td></tr>`
+    ).join("");
+  }
+}
+
+function renderMatches() {
+  const list=document.getElementById("matchList");
+  const filtered=matches.filter(m=>
+    activeFilter==="ALL" || m.group===activeFilter
+  );
+  list.innerHTML=filtered.map(m=>`
+    <div class="match">
+      <div class="match-no">${m.id}</div>
+      <div class="match-info">
+        <strong>${escapeHTML(name(m.a))} vs ${escapeHTML(name(m.b))}</strong><br>
+        <span class="muted">${m.group==="KNOCKOUT"?"बाद फेरी":("ग्रुप "+m.group)} • ${m.time}</span><br>
+        ${matchStatus(m)}
+        ${m.status==="COMPLETED"?`<span class="result"> ${m.sa} - ${m.sb}</span>`:""}
+      </div>
+      <button class="btn small-btn ${m.status==="LIVE"?"orange":"light"}"
+        onclick="selectMatch(${m.id})">${m.status==="LIVE"?"Live पाहा":m.status==="COMPLETED"?"निकाल":"तपशील"}</button>
+    </div>
+  `).join("");
+}
+
+function filterMatches(filter,btn) {
+  activeFilter=filter;
+  document.querySelectorAll("#filterButtons button").forEach(b=>{
+    b.className="btn light";
+  });
+  btn.className="btn primary";
+  renderMatches();
+}
+
+function selectMatch(id) {
+  selectedId=id;
+  renderLive();
+  changeTab("live");
+}
+
+function renderPoints() {
+  const root=document.getElementById("pointsTables");
+  root.innerHTML="";
+  for(const g of ["A","B","C","D"]) {
+    const stats=groups[g].map(t=>({
+      team:t,played:0,w:0,l:0,d:0,pts:0,pf:0,pa:0
+    }));
+    matches.filter(m=>m.group===g && m.status==="COMPLETED").forEach(m=>{
+      const a=stats.find(s=>s.team===m.a);
+      const b=stats.find(s=>s.team===m.b);
+      if(!a||!b) return;
+      a.played++; b.played++;
+      a.pf+=m.sa; a.pa+=m.sb;
+      b.pf+=m.sb; b.pa+=m.sa;
+      if(m.sa>m.sb) { a.w++;a.pts+=2;b.l++; }
+      else if(m.sb>m.sa) { b.w++;b.pts+=2;a.l++; }
+      else { a.d++;b.d++;a.pts++;b.pts++; }
+    });
+    stats.sort((a,b)=>b.pts-a.pts || (b.pf-b.pa)-(a.pf-a.pa) || b.pf-a.pf);
+    root.innerHTML+=`
+      <h3>ग्रुप ${g}</h3>
+      <div class="table-wrap card" style="padding:0">
+        <table><thead><tr>
+          <th>क्र.</th><th>संघ</th><th>खेळ</th><th>वि.</th>
+          <th>ब.</th><th>प.</th><th>गुण</th><th>फरक</th>
+        </tr></thead><tbody>
+        ${stats.map((s,i)=>`<tr>
+          <td>${i+1}</td><td>${escapeHTML(name(s.team))}</td>
+          <td>${s.played}</td><td>${s.w}</td><td>${s.d}</td>
+          <td>${s.l}</td><td><strong>${s.pts}</strong></td>
+          <td>${s.pf-s.pa}</td>
+        </tr>`).join("")}
+        </tbody></table>
+      </div>`;
+  }
+}
+
+function loadAdmin() {
+  const sel=document.getElementById("adminMatch");
+  sel.innerHTML=matches.map(m=>
+    `<option value="${m.id}">सामना ${m.id}: ${name(m.a)} vs ${name(m.b)}</option>`
+  ).join("");
+  sel.value=selectedId;
+  fillAdmin();
+  document.getElementById("teamNames").value=
+    Object.entries(names).filter(([k,v])=>v!==k+" संघ")
+      .map(([k,v])=>k+", "+v).join("\n");
+}
+
+document.getElementById("adminMatch").addEventListener("change",()=>{
+  selectedId=Number(document.getElementById("adminMatch").value);
+  fillAdmin();
+});
+
+function fillAdmin() {
+  const m=matches.find(x=>x.id===selectedId);
+  if(!m) return;
+  document.getElementById("adminStatus").value=m.status;
+  document.getElementById("adminPeriod").value=m.period;
+  document.getElementById("adminHomeLabel").textContent=name(m.a);
+  document.getElementById("adminAwayLabel").textContent=name(m.b);
+  document.getElementById("adminHomeScore").value=m.sa;
+  document.getElementById("adminAwayScore").value=m.sb;
+  document.getElementById("adminPlayers").value=m.players.map(p=>
+    `${p.name}, ${p.team}, ${p.raid}, ${p.tackle}`
+  ).join("\n");
+}
+
+function saveMatch() {
+  const m=matches.find(x=>x.id===selectedId);
+  if(!m) return;
+  m.status=document.getElementById("adminStatus").value;
+  m.period=document.getElementById("adminPeriod").value;
+  m.sa=Math.max(0,Number(document.getElementById("adminHomeScore").value)||0);
+  m.sb=Math.max(0,Number(document.getElementById("adminAwayScore").value)||0);
+  m.players=document.getElementById("adminPlayers").value
+    .split("\n").map(line=>line.trim()).filter(Boolean).map(line=>{
+      const a=line.split(",").map(x=>x.trim());
+      return {
+        name:a[0]||"खेळाडू",
+        team:a[1]||m.a,
+        raid:Math.max(0,Number(a[2])||0),
+        tackle:Math.max(0,Number(a[3])||0)
+      };
+    });
+  renderLive();
+  renderMatches();
+  renderPoints();
+  loadAdmin();
+  alert("Demo मध्ये बदल सेव्ह झाले!");
+}
+
+function saveTeamNames() {
+  const lines=document.getElementById("teamNames").value.split("\n");
+  lines.forEach(line=>{
+    const p=line.split(",");
+    if(p.length>=2 && names[p[0].trim()]!==undefined) {
+      names[p[0].trim()]=p.slice(1).join(",").trim();
+    }
+  });
+  loadAdmin();
+  renderMatches();
+  renderLive();
+  renderPoints();
+  alert("संघांची नावे Demo मध्ये सेव्ह झाली!");
+}
+
+function resetDemo() {
+  if(!confirm("सर्व Demo बदल पुसून सुरुवातीपासून सुरू करायचे?")) return;
+  matches=buildMatches();
+  selectedId=1;
+  names={};
+  Object.values(groups).flat().forEach(t=>names[t]=t+" संघ");
+  renderLive();
+  renderMatches();
+  renderPoints();
+  loadAdmin();
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  })[c]);
+}
+
+renderLive();
+renderMatches();
+renderPoints();
+loadAdmin();
+</script>
+</body>
+</html>
+
