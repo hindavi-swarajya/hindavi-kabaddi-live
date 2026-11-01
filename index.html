@@ -1,0 +1,814 @@
+
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>हिंदवी स्वराज्य मंडळ | कबड्डी २०२६</title>
+<style>
+:root{--navy:#102747;--orange:#f28c28;--bg:#f3f6fa;--green:#168653}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,"Noto Sans Devanagari",sans-serif;background:var(--bg);color:#172033}
+header{background:linear-gradient(120deg,#102747,#194c79);color:white;padding:22px 15px;text-align:center}
+header h1{font-size:23px;margin:0 0 7px}
+header p{margin:0;color:#e1eaf5}
+nav{display:flex;gap:7px;overflow-x:auto;padding:10px;background:white;position:sticky;top:0;z-index:3;box-shadow:0 2px 8px #0001}
+nav button{white-space:nowrap;border:0;padding:11px 14px;border-radius:9px;background:#e9eef5;color:#172033;font-weight:bold}
+nav button.active{background:var(--navy);color:white}
+main{max-width:1000px;margin:auto;padding:14px}
+section{display:none}
+section.active{display:block}
+.card{background:white;border-radius:13px;padding:15px;margin-bottom:13px;box-shadow:0 2px 9px #0000000c}
+h2{font-size:20px;margin:0 0 14px}
+h3{font-size:17px;margin:5px 0 12px}
+input,select,textarea{width:100%;padding:11px;border:1px solid #ccd5e1;border-radius:8px;font-size:15px;background:white;margin:5px 0 10px}
+label{font-size:14px;font-weight:bold}
+button.primary,button.secondary,button.danger{border:0;padding:10px 13px;border-radius:8px;font-weight:bold;cursor:pointer;margin:3px 2px}
+button.primary{background:var(--navy);color:white}
+button.secondary{background:#e8eef6;color:var(--navy)}
+button.danger{background:#ffe6e6;color:#a41d1d}
+button:disabled{opacity:.45}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}
+.small{font-size:13px;color:#657187}
+.badge{display:inline-block;padding:5px 9px;border-radius:20px;background:#e8eef6;font-size:12px;font-weight:bold}
+.live{background:#ffe5e5;color:#b42323}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:10px 7px;border-bottom:1px solid #e5eaf0}
+th{background:#f2f5f9}
+.table-wrap{overflow-x:auto}
+.score{font-size:30px;font-weight:bold;color:var(--navy)}
+.timer{font-size:36px;font-weight:bold;font-variant-numeric:tabular-nums;text-align:center;padding:12px}
+.match{border:1px solid #e1e7ef;border-radius:10px;padding:12px;margin:9px 0;background:white}
+.match-top{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
+.teamline{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin:15px 0;text-align:center;font-weight:bold}
+.teamline span:last-child{text-align:right}
+.teamline span:first-child{text-align:left}
+.empty{color:#6b7587;text-align:center;padding:18px}
+.player-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.player-team-card{background:#f7f9fc;border:1px solid #e1e7ef;border-radius:9px;padding:10px}
+.player-team-card h4{margin:0 0 8px;color:var(--navy)}
+.player-stat-row{display:flex;justify-content:space-between;gap:8px;padding:6px 2px;border-bottom:1px solid #e5eaf0;font-size:13px}
+.player-stat-row:last-child{border-bottom:0}
+.fixture-detail{display:none;background:#f7f9fc;border-radius:8px;padding:10px;margin-top:10px}
+.fixture-detail.open{display:block}
+
+/* Premium live-score presentation */
+.live-stage{position:relative;overflow:hidden;border-radius:18px;padding:18px;background:linear-gradient(135deg,#0b1d36 0%,#12365b 58%,#1b5274 100%);color:#fff;box-shadow:0 12px 28px #1027472b}
+.live-stage:before{content:"";position:absolute;width:230px;height:230px;border-radius:50%;background:#f28c2820;right:-85px;top:-110px}
+.live-stage:after{content:"";position:absolute;width:150px;height:150px;border-radius:50%;border:1px solid #ffffff12;right:45px;bottom:-105px}
+.live-stage>*{position:relative;z-index:1}
+.live-stage-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.live-pill{display:inline-flex;align-items:center;gap:7px;padding:7px 11px;border-radius:30px;background:#ffeded;color:#b42323;font-size:12px;font-weight:800;letter-spacing:.4px}
+.live-dot{width:8px;height:8px;border-radius:50%;background:#e32636;box-shadow:0 0 0 4px #e3263620}
+.live-match-meta{font-size:12px;color:#d3e2f2;font-weight:700}
+.live-scoreboard{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:12px;margin:25px 0 18px}
+.live-team{text-align:center;min-width:0}
+.live-team-mark{width:58px;height:58px;margin:0 auto 10px;border-radius:17px;display:grid;place-items:center;background:#ffffff18;border:1px solid #ffffff2b;color:#fff;font-size:24px;font-weight:900}
+.live-team-name{font-size:clamp(14px,2.8vw,19px);font-weight:800;line-height:1.35;overflow-wrap:anywhere}
+.live-score-center{text-align:center;min-width:115px}
+.live-score-numbers{font-size:clamp(34px,7vw,54px);line-height:1;font-weight:900;letter-spacing:1px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.live-vs{margin-top:7px;color:#b9cde0;font-size:10px;font-weight:800;letter-spacing:2px}
+.live-timer-wrap{max-width:250px;margin:0 auto 14px;padding:10px 18px;border-radius:13px;text-align:center;background:#07172b80;border:1px solid #ffffff20}
+.live-timer-label{font-size:10px;color:#b9cde0;font-weight:800;letter-spacing:1.8px}
+.live-timer-wrap .timer{font-size:32px;color:#fff;padding:3px;font-weight:900}
+.live-stage-footer{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.live-meta-chip{padding:6px 10px;border-radius:20px;background:#ffffff14;border:1px solid #ffffff20;color:#dce9f6;font-size:11px;font-weight:700}
+.live-player-panel{margin-top:14px}
+.live-player-panel .player-team-card{background:#fff;border-color:#e6ebf2}
+.result-card{border:1px solid #e5eaf0;border-radius:13px;padding:13px;margin:10px 0;background:#fff}
+.result-scoreline{display:flex;align-items:center;justify-content:space-between;gap:8px;font-weight:800}
+.result-team{flex:1;overflow-wrap:anywhere}
+.result-team:last-child{text-align:right}
+.result-score{padding:8px 10px;border-radius:9px;background:#edf2f8;color:#102747;font-size:19px;font-weight:900;white-space:nowrap}
+.result-winner{margin:9px 0 0;color:#168653;font-size:13px;font-weight:800}
+.live-empty{padding:30px 15px;text-align:center;border:1px dashed #cbd5e1;border-radius:16px;background:linear-gradient(135deg,#fff,#f2f6fb)}
+.live-empty-icon{font-size:34px;margin-bottom:8px}
+.live-empty-title{font-size:17px;font-weight:800;color:#102747}
+.live-empty-sub{font-size:13px;color:#718096;margin-top:5px}
+@media(max-width:500px){
+  .player-stats{grid-template-columns:1fr}
+  .live-stage{padding:14px}
+  .live-scoreboard{gap:5px;margin:22px 0 16px}
+  .live-team-mark{width:45px;height:45px;border-radius:13px;font-size:20px}
+  .live-score-center{min-width:92px}
+  .live-score-numbers{font-size:34px}
+  .live-team-name{font-size:13px}
+  .live-timer-wrap .timer{font-size:28px}
+}
+footer{text-align:center;color:#778195;font-size:12px;padding:20px}
+hr{border:0;border-top:1px solid #e5eaf0;margin:15px 0}
+@media(max-width:500px){header h1{font-size:20px}main{padding:9px}.card{padding:12px}th,td{padding:8px 5px;font-size:12px}}
+
+/* Hide Admin Login from the public navigation; access remains available via #login. */
+.admin-login-nav{display:none!important}
+</style>
+</head>
+<body>
+<header>
+  <h1>हिंदवी स्वराज्य मंडळ</h1>
+  <p>कबड्डी स्पर्धा २०२६ • Live Score</p>
+</header>
+
+<nav>
+  <button class="active" data-tab="live">🔴 Live Score</button>
+  <button data-tab="login" class="admin-login-nav" aria-hidden="true" tabindex="-1">🔐 Admin Login</button>
+  <button id="adminNavBtn" data-tab="admin" style="display:none">⚙️ Admin Panel</button>
+  <button data-tab="fixtures">📅 Fixtures</button>
+  <button data-tab="leaders">⭐ Top Players</button>
+</nav>
+
+<main>
+<section id="live" class="active">
+  <div class="card">
+    <h2>🔴 Live Match</h2>
+    <div id="liveMatch"><div class="empty">सध्या Live सामना नाही.</div></div>
+  </div>
+  <div class="card">
+    <h2>सामन्यांचे निकाल</h2>
+    <div id="recentResults"></div>
+  </div>
+</section>
+
+<section id="fixtures">
+  <div class="card">
+    <h2>📅 सामन्यांचे वेळापत्रक</h2>
+    <label>सामने फिल्टर करा</label>
+    <select id="fixtureFilter" onchange="renderFixtures()">
+      <option value="ALL">सर्व सामने</option>
+      <option value="GROUP">Group सामने</option>
+      <option value="KNOCKOUT">Knockout सामने</option>
+      <option value="SCHEDULED">आगामी सामने</option>
+      <option value="LIVE">Live सामने</option>
+      <option value="COMPLETED">पूर्ण झालेले सामने</option>
+    </select>
+    <div id="fixtureList"></div>
+  </div>
+</section>
+
+<section id="leaders">
+  <div class="card">
+    <h2>⭐ स्पर्धेतील सर्वोत्तम खेळाडू</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>⚡ Top Raider</h3>
+        <div id="topRaider"></div>
+      </div>
+      <div class="card">
+        <h3>🛡️ Top Defender</h3>
+        <div id="topDefender"></div>
+      </div>
+    </div>
+    <p class="small">ही आकडेवारी Admin मध्ये नोंदवलेल्या आणि सेव्ह केलेल्या खेळाडूंच्या गुणांवर आधारित आहे.</p>
+  </div>
+</section>
+
+<section id="login">
+  <div class="card">
+    <h2>🔐 Admin Login</h2>
+    <p class="small">फक्त अधिकृत Admin खात्याने Login करा. प्रेक्षकांना Login करण्याची गरज नाही.</p>
+    <form id="loginForm">
+      <label>Admin Email</label>
+      <input id="loginEmail" type="email" autocomplete="username" required placeholder="Admin email">
+      <label>Password</label>
+      <input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Password">
+      <button class="primary" type="submit">Login करा</button>
+    </form>
+    <p id="authMessage" class="small" aria-live="polite">Admin Login केल्यावर Admin Panel उपलब्ध होईल.</p>
+    <button id="logoutBtn" class="secondary" type="button" style="display:none" onclick="logoutAdmin()">Logout</button>
+  </div>
+</section>
+
+<section id="admin">
+  <div class="card">
+    <h2>⚙️ Admin Panel</h2>
+    <p class="small">Admin म्हणून Login केलेले असल्यासच येथे बदल करता येतील. बदल सर्व प्रेक्षकांना Real-time दिसतील.</p>
+  </div>
+
+  <div class="card">
+    <div class="match-top"><h3>१. संघ व्यवस्थापन</h3><button type="button" class="secondary" onclick="toggleTeamForm()" id="toggleTeamFormBtn">Hide</button></div>
+    <div id="teamFormWrap">
+    <form id="teamForm">
+      <label>संघाचे नाव</label>
+      <input id="teamName" required placeholder="उदा. पाटणे वॉरियर्स">
+      <button class="primary">➕ संघ जोडा</button>
+    </form>
+    <p id="teamCount"></p>
+    <div id="teamList"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="match-top"><h3>२. मंडळाने ठरवलेला सामना Add करा</h3><button type="button" class="secondary" onclick="toggleMatchForm()" id="toggleMatchFormBtn">Hide</button></div>
+    <div id="matchFormWrap"><form id="matchForm">
+      <label>सामना प्रकार</label>
+      <select id="matchType">
+        <option value="GROUP">Group Match</option>
+        <option value="KNOCKOUT">Knockout Match</option>
+      </select>
+      <div id="groupField">
+        <label>Group</label>
+        <select id="matchGroup">
+          <option value="A">Group A</option>
+          <option value="B">Group B</option>
+          <option value="C">Group C</option>
+          <option value="D">Group D</option>
+        </select>
+      </div>
+      <label>सामना क्रमांक</label>
+      <input id="matchNumber" placeholder="उदा. 1 किंवा Semi Final 1">
+      <label>पहिला संघ</label>
+      <select id="teamA" required></select>
+      <label>दुसरा संघ</label>
+      <select id="teamB" required></select>
+      <label>तारीख</label>
+      <input type="date" id="matchDate">
+      <label>वेळ</label>
+      <input type="time" id="matchTime">
+      <button class="primary">➕ सामना Add करा</button>
+    </form>
+    <p class="small">Fixtures आपोआप तयार होत नाहीत. मंडळाने निश्चित केलेले प्रत्येक सामना येथे Add करा.</p></div>
+  </div>
+
+  <div class="card">
+    <h3>३. सामना व स्कोअर व्यवस्थापन</h3>
+    <label>सामना निवडा</label>
+    <select id="adminMatch" onchange="renderAdminMatch()"></select>
+    <div id="adminMatchEditor"><div class="empty">आधी सामना Add करा.</div></div>
+  </div>
+
+  <div class="card">
+    <h3>४. डेटा व्यवस्थापन</h3>
+    <button class="secondary" onclick="exportData()">⬇️ डेटा डाउनलोड करा (JSON)</button>
+    <label>आधी डाउनलोड केलेला डेटा परत Import करा</label>
+    <input type="file" id="importFile" accept=".json,application/json">
+    <button class="secondary" onclick="importData()">Import Data</button>
+    <hr>
+    <p class="small">सावधान: Demo Reset केल्यास या ब्राउझरमधील संघ, सामने आणि गुणांची माहिती हटेल.</p>
+    <button class="danger" onclick="resetData()">सर्व Demo डेटा हटवा</button>
+  </div>
+</section>
+</main>
+
+<footer>हिंदवी स्वराज्य मंडळ • कबड्डी स्पर्धा २०२६</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDE30gxIWsKALf3ri94WNBCYsJpHmrw2Mw",
+  authDomain: "hindavi-kabaddi-live.firebaseapp.com",
+  projectId: "hindavi-kabaddi-live",
+  storageBucket: "hindavi-kabaddi-live.firebasestorage.app",
+  messagingSenderId: "761648718221",
+  appId: "1:761648718221:web:290ebae04f370e7154ddc4"
+};
+const ADMIN_UID = "iZGAiEb9ZzN66PMZUMaQNlaJoz23";
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+const liveDoc = db.collection("public").doc("liveData");
+let isAdmin = false;
+let dataReady = false;
+let applyingRemote = false;
+let unsubscribeLive = null;
+
+const KEY = "hindaviKabaddi2026_v2";
+let data = loadData();
+let ticker = null;
+
+function blankData(){
+  return {teams:[],matches:[],nextTeam:1,nextMatch:1};
+}
+function loadData(){
+  try {
+    const d = JSON.parse(localStorage.getItem(KEY));
+    if(d && Array.isArray(d.teams) && Array.isArray(d.matches)) return d;
+  } catch(e){}
+  return blankData();
+}
+function save(){
+  localStorage.setItem(KEY,JSON.stringify(data));
+  renderAll();
+  if(isAdmin && dataReady && !applyingRemote){
+    liveDoc.set(data).catch(err=>{
+      console.error("Firestore save error:",err);
+      alert("डेटा Firebase मध्ये सेव्ह झाला नाही. Internet आणि Admin Login तपासा.");
+    });
+  }
+}
+function esc(s){
+  return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function team(id){return data.teams.find(t=>t.id===id)}
+function match(id){return data.matches.find(m=>m.id===id)}
+function teamName(id){return team(id)?.name || "संघ निवडलेला नाही"}
+function fmtDate(m){
+  const d=m.date||"",t=m.time||"";
+  return [d,t].filter(Boolean).join(" • ") || "वेळ निश्चित नाही";
+}
+function statusLabel(s){
+  return ({SCHEDULED:"आगामी",LIVE:"LIVE",PAUSED:"थांबलेला",COMPLETED:"पूर्ण",CANCELLED:"रद्द"})[s]||s;
+}
+function duration(m){
+  if(!m.startedAt) return Number(m.elapsed||0);
+  if(m.status==="LIVE") return Number(m.elapsed||0)+Math.floor((Date.now()-m.startedAt)/1000);
+  return Number(m.elapsed||0);
+}
+function clock(sec){
+  sec=Math.max(0,sec||0);
+  return String(Math.floor(sec/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0");
+}
+function activeMatch(){
+  // Paused match should remain visible on the Live Score panel.
+  // If another match is LIVE, always prioritize that one.
+  return data.matches.find(m=>m.status==="LIVE")||data.matches.find(m=>m.status==="PAUSED")||null;
+}
+function goTab(id){
+  document.querySelectorAll("main section").forEach(s=>s.classList.toggle("active",s.id===id));
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));
+}
+// Admin Login tab is hidden from the public navigation. Admin can open it directly with #login.
+function openTabFromHash(){
+  const requested=(window.location.hash||"").replace("#","");
+  if(requested==="login" && !isAdmin) goTab("login");
+}
+window.addEventListener("hashchange",openTabFromHash);
+openTabFromHash();
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>goTab(b.dataset.tab)));
+document.getElementById("teamForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const name=document.getElementById("teamName").value.trim();
+  if(!name)return;
+  if(data.teams.some(t=>t.name.toLowerCase()===name.toLowerCase())){
+    alert("या नावाचा संघ आधीच आहे.");return;
+  }
+  data.teams.push({id:"T"+data.nextTeam++,name,players:[]});
+  document.getElementById("teamName").value="";
+  save();
+});
+
+function removeTeam(id){
+  const used=data.matches.some(m=>(m.a===id||m.b===id)&&m.status!=="CANCELLED");
+  if(used){alert("या संघाचे सामने आधीच आहेत. संघ काढण्याआधी संबंधित सामने रद्द करा किंवा दुरुस्त करा.");return;}
+  if(!confirm("हा संघ काढायचा आहे?"))return;
+  data.teams=data.teams.filter(t=>t.id!==id);
+  save();
+}
+function renameTeam(id){
+  const t=team(id);if(!t)return;
+  const name=prompt("संघाचे नवीन नाव:",t.name);
+  if(!name||!name.trim())return;
+  if(data.teams.some(x=>x.id!==id&&x.name.toLowerCase()===name.trim().toLowerCase())){
+    alert("या नावाचा संघ आधीच आहे.");return;
+  }
+  t.name=name.trim();save();
+}
+
+document.getElementById("matchType").addEventListener("change",()=>{
+  document.getElementById("groupField").style.display=
+    document.getElementById("matchType").value==="GROUP"?"block":"none";
+});
+document.getElementById("matchForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const a=document.getElementById("teamA").value;
+  const b=document.getElementById("teamB").value;
+  if(data.teams.length<2){alert("किमान दोन संघ Add करा.");return;}
+  if(!a||!b||a===b){alert("दोन वेगवेगळे संघ निवडा.");return;}
+  if(data.matches.some(m=>m.status==="LIVE")){
+    alert("आधी सुरू असलेला सामना पूर्ण करा किंवा थांबवा.");return;
+  }
+  const type=document.getElementById("matchType").value;
+  data.matches.push({
+    id:"M"+data.nextMatch++,
+    number:document.getElementById("matchNumber").value.trim()||String(data.nextMatch-1),
+    type,group:type==="GROUP"?document.getElementById("matchGroup").value:"",
+    a,b,date:document.getElementById("matchDate").value,
+    time:document.getElementById("matchTime").value,
+    status:"SCHEDULED",sa:0,sb:0,elapsed:0,startedAt:null,players:[...(team(a)?.players||[]).map(p=>({playerId:p.id,name:p.name,team:a,raid:0,tackle:0})),...(team(b)?.players||[]).map(p=>({playerId:p.id,name:p.name,team:b,raid:0,tackle:0}))]
+  });
+  save();document.getElementById("matchNumber").value="";
+  alert("सामना यशस्वीपणे Add झाला.");
+});
+
+function renderTeamSelects(){
+  const options=data.teams.map(t=>`<option value="${esc(t.id)}">${esc(t.name)}</option>`).join("");
+  ["teamA","teamB"].forEach(id=>{
+    const el=document.getElementById(id),old=el.value;
+    el.innerHTML='<option value="">संघ निवडा</option>'+options;
+    if(data.teams.some(t=>t.id===old))el.value=old;
+  });
+}
+function renderTeams(){
+  document.getElementById("teamCount").innerHTML=`एकूण संघ: <b>${data.teams.length}</b>`;
+  document.getElementById("teamList").innerHTML=data.teams.length?data.teams.map((t,i)=>{
+    t.players=Array.isArray(t.players)?t.players:[];
+    return `<div class="match"><b>${i+1}. ${esc(t.name)}</b>
+      <p class="small">खेळाडू: ${t.players.length}</p>
+      <button class="secondary" onclick="addRosterPlayer('${t.id}')">➕ खेळाडू Add करा</button>
+      <button class="secondary" onclick="renameTeam('${t.id}')">नाव बदला</button>
+      <button class="danger" onclick="removeTeam('${t.id}')">संघ काढा</button>
+      ${t.players.length?`<div>${t.players.map((p,j)=>`<div class="player-stat-row"><span>${j+1}. ${esc(p.name)}</span><button class="danger" onclick="removeRosterPlayer('${t.id}',${j})">काढा</button></div>`).join("")}</div>`:'<p class="small">अजून खेळाडू नोंदवलेले नाहीत.</p>'}
+    </div>`;
+  }).join(""):'<div class="empty">अजून संघ Add केलेले नाहीत.</div>';
+}
+function addRosterPlayer(id){
+  const t=team(id);if(!t)return;
+  const name=prompt(`${t.name} साठी खेळाडूचे नाव:`);
+  if(!name||!name.trim())return;
+  t.players=Array.isArray(t.players)?t.players:[];
+  if(t.players.some(p=>p.name.toLowerCase()===name.trim().toLowerCase())){alert("हा खेळाडू आधीच नोंदवलेला आहे.");return;}
+  t.players.push({id:"P"+Date.now()+Math.random().toString(36).slice(2,6),name:name.trim()});
+  save();
+}
+function removeRosterPlayer(id,index){
+  const t=team(id);if(!t||!t.players||!t.players[index])return;
+  if(!confirm(`${t.players[index].name} यांना संघाच्या यादीतून काढायचे?`))return;
+  t.players.splice(index,1);save();
+}
+function renderMatchSelect(){
+  const el=document.getElementById("adminMatch"),old=el.value;
+  el.innerHTML='<option value="">सामना निवडा</option>'+data.matches.map(m=>
+    `<option value="${esc(m.id)}">#${esc(m.number)} • ${esc(teamName(m.a))} विरुद्ध ${esc(teamName(m.b))} (${statusLabel(m.status)})</option>`
+  ).join("");
+  if(data.matches.some(m=>m.id===old))el.value=old;
+}
+function renderAdminMatch(){
+  const m=match(document.getElementById("adminMatch").value),el=document.getElementById("adminMatchEditor");
+  if(!m){el.innerHTML='<div class="empty">सामना निवडा.</div>';return;}
+  if(!Array.isArray(m.players))m.players=[];
+  [m.a,m.b].forEach(teamId=>{
+    (team(teamId)?.players||[]).forEach(rp=>{
+      if(!m.players.some(mp=>mp.playerId===rp.id || (mp.team===teamId && mp.name===rp.name))){
+        m.players.push({playerId:rp.id,name:rp.name,team:teamId,raid:0,tackle:0});
+      }
+    });
+  });
+  el.innerHTML=`
+    <p><b>${esc(teamName(m.a))} विरुद्ध ${esc(teamName(m.b))}</b></p>
+    <p class="small">${m.type==="GROUP"?"Group "+esc(m.group):"Knockout"} • ${esc(fmtDate(m))}</p>
+    <label>${esc(teamName(m.a))} स्कोअर</label>
+    <input id="editSA" type="number" min="0" value="${m.sa}">
+    <label>${esc(teamName(m.b))} स्कोअर</label>
+    <input id="editSB" type="number" min="0" value="${m.sb}">
+    <div class="timer">${clock(duration(m))}</div>
+    <label>सामन्याची स्थिती</label>
+    <select id="editStatus">
+      ${["SCHEDULED","LIVE","PAUSED","COMPLETED","CANCELLED"].map(s=>`<option value="${s}" ${m.status===s?"selected":""}>${statusLabel(s)}</option>`).join("")}
+    </select>
+    <hr><h3>खेळाडूंचे गुण</h3>
+    <p class="small">खेळाडूचे नाव आणि त्या सामन्यातील Raid Points व Tackle Points नोंदवा. नाव आणि गुण दोन्ही रिकामे असल्यास ती ओळ सेव्ह होणार नाही.</p>
+    <div id="playerRows">${(m.players||[]).map((p,i)=>playerRow(p,i,[m.a,m.b])).join("")}</div>
+    <button class="secondary" onclick="addPlayerRow()">➕ खेळाडू जोडा</button>
+    <hr>
+    <button class="primary" onclick="saveMatch('${m.id}')">💾 स्कोअर व माहिती सेव्ह करा</button>
+    <button class="secondary" onclick="setMatchStatus('${m.id}','LIVE')">▶ सामना सुरू करा</button>
+    <button class="secondary" onclick="setMatchStatus('${m.id}','PAUSED')">⏸ थांबवा</button>
+    <button class="primary" onclick="completeMatch('${m.id}')">✓ सामना पूर्ण</button>
+    <button class="danger" onclick="deleteMatch('${m.id}')">सामना हटवा</button>`;
+}
+function playerRow(p={},i,teamIds=null){
+  return `<div class="match player-row">
+    <label>खेळाडूचे नाव</label><input class="pname" value="${esc(p.name||"")}" placeholder="खेळाडूचे नाव">
+    <input class="pplayerid" type="hidden" value="${esc(p.playerId||"")}">
+    <label>संघ</label><select class="pteam">${(teamIds||data.teams.map(t=>t.id)).map(id=>`<option value="${esc(id)}" ${(p.team||"")===id?"selected":""}>${esc(teamName(id))}</option>`).join("")}</select>
+    <div class="grid"><div><label>Raid Points</label><input class="praid" type="number" min="0" value="${Number(p.raid||0)}"></div>
+    <div><label>Tackle Points</label><input class="ptackle" type="number" min="0" value="${Number(p.tackle||0)}"></div></div>
+    <button class="danger" onclick="this.closest('.player-row').remove()">ही ओळ काढा</button>
+  </div>`;
+}
+function addPlayerRow(){
+  const m=match(document.getElementById("adminMatch").value);
+  if(!m)return;
+  document.getElementById("playerRows").insertAdjacentHTML("beforeend",playerRow({team:m.a},Date.now(),[m.a,m.b]));
+}
+function setMatchStatus(id,status){
+  const m=match(id);if(!m)return;
+  if(status==="LIVE"){
+    const other=data.matches.find(x=>x.id!==id&&x.status==="LIVE");
+    if(other){alert("दुसरा सामना Live आहे. आधी तो थांबवा.");return;}
+    if(m.status!=="LIVE"){
+      m.startedAt=Date.now();
+      m.status="LIVE";
+    }
+  }else if(status==="PAUSED"){
+    if(m.status==="LIVE"){m.elapsed=duration(m);m.startedAt=null;}
+    m.status="PAUSED";
+  }else if(status==="COMPLETED"){
+    if(m.status==="LIVE")m.elapsed=duration(m);
+    m.startedAt=null;m.status="COMPLETED";
+  }else{
+    if(m.status==="LIVE")m.elapsed=duration(m);
+    m.startedAt=null;m.status=status;
+  }
+  save();
+}
+function saveMatch(id){
+  const m=match(id);if(!m)return;
+  const sa=Number(document.getElementById("editSA").value);
+  const sb=Number(document.getElementById("editSB").value);
+  if(sa<0||sb<0||!Number.isFinite(sa)||!Number.isFinite(sb)){alert("योग्य स्कोअर टाका.");return;}
+  m.sa=sa;m.sb=sb;
+  m.players=[...document.querySelectorAll(".player-row")].map(row=>({
+    playerId:row.querySelector(".pplayerid")?.value||"",
+    name:row.querySelector(".pname").value.trim(),
+    team:row.querySelector(".pteam").value,
+    raid:Math.max(0,Number(row.querySelector(".praid").value)||0),
+    tackle:Math.max(0,Number(row.querySelector(".ptackle").value)||0)
+  })).filter(p=>p.name);
+  const status=document.getElementById("editStatus").value;
+  if(status==="LIVE"){
+    const other=data.matches.find(x=>x.id!==id&&x.status==="LIVE");
+    if(other){alert("दुसरा सामना Live आहे. आधी तो थांबवा.");return;}
+    if(m.status!=="LIVE")m.startedAt=Date.now();
+  }else{
+    if(m.status==="LIVE")m.elapsed=duration(m);
+    m.startedAt=null;
+  }
+  m.status=status;
+  save();alert("सामन्याची माहिती सेव्ह झाली.");
+}
+function completeMatch(id){
+  const statusEl=document.getElementById("editStatus");
+  if(statusEl)statusEl.value="COMPLETED";
+  saveMatch(id);
+}
+function deleteMatch(id){
+  if(!isAdmin){alert("सामना हटवण्यासाठी Admin Login आवश्यक आहे.");return;}
+  const m=match(id);
+  if(!m)return;
+  const label=`सामना #${m.number} • ${teamName(m.a)} विरुद्ध ${teamName(m.b)}`;
+  if(!confirm(`${label}\n\nहा सामना Fixtures, Points Table आणि Live Score मधून कायमचा हटवायचा आहे?`))return;
+  data.matches=data.matches.filter(x=>x.id!==id);
+  save();
+}
+
+function winnerText(m){
+  if(m.status!=="COMPLETED")return "";
+  if(m.sa>m.sb)return "विजेता: "+teamName(m.a);
+  if(m.sb>m.sa)return "विजेता: "+teamName(m.b);
+  return "सामना बरोबरीत";
+}
+function playerStatsMarkup(m,teamId){
+  const rows=(m.players||[]).filter(p=>p.team===teamId&&p.name);
+  return `<div class="player-team-card"><h4>${esc(teamName(teamId))} – खेळाडू गुण</h4>
+    ${rows.length?rows.map(p=>`<div class="player-stat-row"><span>${esc(p.name)}</span><b>Raid ${Number(p.raid)||0} • Tackle ${Number(p.tackle)||0} • Total ${(Number(p.raid)||0)+(Number(p.tackle)||0)}</b></div>`).join(""):'<p class="small">खेळाडूंचे गुण नोंदवलेले नाहीत.</p>'}
+  </div>`;
+}
+function matchPlayersMarkup(m){
+  return `<div class="player-stats">${playerStatsMarkup(m,m.a)}${playerStatsMarkup(m,m.b)}</div>`;
+}
+function toggleMatchDetails(id){
+  const el=document.getElementById("fixture-detail-"+id);
+  if(el)el.classList.toggle("open");
+}
+function renderFixtures(){
+  const filter=document.getElementById("fixtureFilter").value;
+  let list=data.matches.filter(m=>{
+    if(filter==="ALL")return true;
+    if(filter==="GROUP")return m.type==="GROUP";
+    if(filter==="KNOCKOUT")return m.type==="KNOCKOUT";
+    return m.status===filter;
+  });
+  document.getElementById("fixtureList").innerHTML=list.length?list.map(m=>`
+    <div class="match">
+      <div class="match-top"><b>सामना #${esc(m.number)}</b><span class="badge ${m.status==="LIVE"?"live":""}">${statusLabel(m.status)}</span></div>
+      <div class="teamline"><span>${esc(teamName(m.a))}</span><span>${m.sa} - ${m.sb}</span><span>${esc(teamName(m.b))}</span></div>
+      <p class="small">${m.type==="GROUP"?"Group "+esc(m.group):"Knockout"} • ${esc(fmtDate(m))}</p>
+      ${m.status==="COMPLETED"?`<p><b>${esc(winnerText(m))}</b></p>`:""}
+      ${m.status==="LIVE"?`<p><b>Timer: ${clock(duration(m))}</b></p>`:""}
+      <button class="secondary" onclick="toggleMatchDetails('${m.id}')">सामन्याचा सविस्तर तपशील पहा</button>
+      ${isAdmin?`<button class="danger" type="button" onclick="deleteMatch('${m.id}')">🗑️ हा सामना हटवा</button>`:""}
+      <div class="fixture-detail" id="fixture-detail-${m.id}">
+        <p><b>${esc(teamName(m.a))} ${m.sa} – ${m.sb} ${esc(teamName(m.b))}</b></p>
+        ${m.status==="COMPLETED"?`<p><b>${esc(winnerText(m))}</b></p>`:""}
+        ${matchPlayersMarkup(m)}
+      </div>
+    </div>`).join(""):'<div class="empty">या विभागात सामने नाहीत.</div>';
+}
+function renderLive(){
+  const m=activeMatch();
+  document.getElementById("liveMatch").innerHTML=m?`
+    <div class="live-stage">
+      <div class="live-stage-top">
+        <span class="live-pill"><span class="live-dot"></span> ${m.status==="PAUSED"?"⏸ PAUSED":"LIVE NOW"}</span>
+        <span class="live-match-meta">MATCH #${esc(m.number)}</span>
+      </div>
+      <div class="live-scoreboard">
+        <div class="live-team">
+          <div class="live-team-mark">A</div>
+          <div class="live-team-name">${esc(teamName(m.a))}</div>
+        </div>
+        <div class="live-score-center">
+          <div class="live-score-numbers">${Number(m.sa)||0} : ${Number(m.sb)||0}</div>
+          <div class="live-vs">SCORE</div>
+        </div>
+        <div class="live-team">
+          <div class="live-team-mark">B</div>
+          <div class="live-team-name">${esc(teamName(m.b))}</div>
+        </div>
+      </div>
+      <div class="live-timer-wrap">
+        <div class="live-timer-label">MATCH TIME</div>
+        <div class="timer" id="liveTimer">${clock(duration(m))}</div>
+      </div>
+      <div class="live-stage-footer">
+        <span class="live-meta-chip">${m.type==="GROUP"?"GROUP "+esc(m.group):"KNOCKOUT"}</span>
+        <span class="live-meta-chip">${esc(fmtDate(m))}</span>
+      </div>
+    </div>
+    <div class="live-player-panel">${matchPlayersMarkup(m)}</div>`
+    :'<div class="live-empty"><div class="live-empty-icon">🏆</div><div class="live-empty-title">सध्या कोणताही सामना Live नाही</div><div class="live-empty-sub">पुढील सामन्याच्या अपडेटसाठी Fixtures पाहत राहा!</div></div>';
+  const completed=data.matches.filter(x=>x.status==="COMPLETED").slice().reverse();
+  document.getElementById("recentResults").innerHTML=completed.length?completed.map(m=>
+    `<div class="result-card">
+      <div class="small">MATCH #${esc(m.number)} • ${m.type==="GROUP"?"GROUP "+esc(m.group):"KNOCKOUT"}</div>
+      <div class="result-scoreline">
+        <span class="result-team">${esc(teamName(m.a))}</span>
+        <span class="result-score">${Number(m.sa)||0} - ${Number(m.sb)||0}</span>
+        <span class="result-team">${esc(teamName(m.b))}</span>
+      </div>
+      <p class="result-winner">${esc(winnerText(m))}</p>
+      ${matchPlayersMarkup(m)}
+    </div>`
+  ).join(""):'<div class="empty">अजून कोणताही सामना पूर्ण झालेला नाही.</div>';
+}
+function renderPoints(){
+  const groups=[...new Set(data.matches.filter(m=>m.type==="GROUP").map(m=>m.group))].sort();
+  if(!groups.length){
+    document.getElementById("pointsTables").innerHTML='<div class="empty">Group सामने Add केल्यानंतर गुणतालिका येथे दिसेल.</div>';return;
+  }
+  document.getElementById("pointsTables").innerHTML=groups.map(g=>{
+    const ids=new Set(data.matches.filter(m=>m.type==="GROUP"&&m.group===g).flatMap(m=>[m.a,m.b]));
+    const rows=[...ids].map(id=>({id,name:teamName(id),played:0,w:0,l:0,d:0,for:0,against:0,pts:0}));
+    const byId=Object.fromEntries(rows.map(r=>[r.id,r]));
+    data.matches.filter(m=>m.type==="GROUP"&&m.group===g&&m.status==="COMPLETED").forEach(m=>{
+      const a=byId[m.a],b=byId[m.b];if(!a||!b)return;
+      a.played++;b.played++;a.for+=m.sa;a.against+=m.sb;b.for+=m.sb;b.against+=m.sa;
+      if(m.sa>m.sb){a.w++;b.l++;a.pts+=2;}
+      else if(m.sb>m.sa){b.w++;a.l++;b.pts+=2;}
+      else {a.d++;b.d++;a.pts++;b.pts++;}
+    });
+    rows.sort((a,b)=>b.pts-a.pts||(b.for-b.against)-(a.for-a.against)||b.for-a.for||a.name.localeCompare(b.name));
+    return `<h3>Group ${esc(g)}</h3><div class="table-wrap"><table><thead><tr><th>संघ</th><th>खेळले</th><th>वि.</th><th>प.</th><th>ब.</th><th>स्कोअर फरक</th><th>गुण</th></tr></thead><tbody>
+    ${rows.map(r=>`<tr><td>${esc(r.name)}</td><td>${r.played}</td><td>${r.w}</td><td>${r.l}</td><td>${r.d}</td><td>${r.for-r.against}</td><td><b>${r.pts}</b></td></tr>`).join("")}
+    </tbody></table></div><hr>`;
+  }).join("");
+}
+function renderLeaders(){
+  const totals={};
+  data.matches.filter(m=>m.status==="COMPLETED"||m.status==="LIVE"||m.status==="PAUSED").forEach(m=>
+    (m.players||[]).forEach(p=>{
+      if(!p.name)return;
+      const key=p.name.trim().toLowerCase()+"|"+p.team;
+      if(!totals[key])totals[key]={name:p.name,team:p.team,raid:0,tackle:0};
+      totals[key].raid+=Number(p.raid)||0;
+      totals[key].tackle+=Number(p.tackle)||0;
+    })
+  );
+  const arr=Object.values(totals);
+  const top=(field,el)=>{
+    const max=Math.max(0,...arr.map(p=>p[field]));
+    const winners=max>0?arr.filter(p=>p[field]===max):[];
+    document.getElementById(el).innerHTML=winners.length?winners.map(p=>
+      `<p><b>${esc(p.name)}</b></p><p class="small">${esc(teamName(p.team))}</p><div class="score">${max}</div><p class="small">${field==="raid"?"Raid Points":"Tackle Points"}</p><hr>`
+    ).join(""):'<p class="empty">अजून गुण नोंदवलेले नाहीत.</p>';
+  };
+  top("raid","topRaider");top("tackle","topDefender");
+}
+function renderAll(){
+  renderTeamSelects();renderTeams();renderMatchSelect();renderAdminMatch();
+  renderFixtures();renderPoints();renderLeaders();renderLive();
+}
+function toggleTeamForm(){
+  const wrap=document.getElementById("teamFormWrap");
+  const btn=document.getElementById("toggleTeamFormBtn");
+  const hidden=wrap.style.display==="none";
+  wrap.style.display=hidden?"block":"none";
+  btn.textContent=hidden?"Hide":"Show";
+}
+function toggleMatchForm(){
+  const wrap=document.getElementById("matchFormWrap");
+  const btn=document.getElementById("toggleMatchFormBtn");
+  const hidden=wrap.style.display==="none";
+  wrap.style.display=hidden?"block":"none";
+  btn.textContent=hidden?"Hide":"Show";
+}
+function exportData(){
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download="hindavi-kabaddi-data.json";a.click();URL.revokeObjectURL(url);
+}
+function importData(){
+  const file=document.getElementById("importFile").files[0];
+  if(!file){alert("आधी JSON फाइल निवडा.");return;}
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const d=JSON.parse(reader.result);
+      if(!Array.isArray(d.teams)||!Array.isArray(d.matches))throw new Error();
+      if(!confirm("सध्याचा डेटा Import केलेल्या डेटाने बदलायचा?"))return;
+      data=d;data.nextTeam=data.nextTeam||data.teams.length+1;
+      data.nextMatch=data.nextMatch||data.matches.length+1;
+      save();alert("डेटा Import झाला.");
+    }catch(e){alert("ही योग्य Export केलेली JSON फाइल नाही.");}
+  };
+  reader.readAsText(file);
+}
+function resetData(){
+  if(!confirm("सर्व संघ, सामने आणि गुण कायमचे हटवायचे? आधी डेटा डाउनलोड करून ठेवा."))return;
+  data=blankData();save();
+}
+function tick(){
+  const m=activeMatch();
+  const timer=document.getElementById("liveTimer");
+  if(timer&&m)timer.textContent=clock(duration(m));
+  const adminTimer=document.querySelector("#adminMatchEditor .timer");
+  const selected=match(document.getElementById("adminMatch")?.value);
+  if(adminTimer&&selected)adminTimer.textContent=clock(duration(selected));
+}
+// Admin Login and live database synchronization
+function setAuthMessage(message){
+  const el=document.getElementById("authMessage");
+  if(el)el.textContent=message;
+}
+function updateAdminVisibility(){
+  
+  const logout=document.getElementById("logoutBtn");
+  if(logout)logout.style.display=isAdmin?"inline-block":"none";
+  const adminNav=document.getElementById("adminNavBtn");
+  if(adminNav)adminNav.style.display=isAdmin?"inline-block":"none";
+  if(!isAdmin && document.getElementById("admin").classList.contains("active"))goTab("live");
+}
+
+document.getElementById("loginForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const email=document.getElementById("loginEmail").value.trim();
+  const password=document.getElementById("loginPassword").value;
+  setAuthMessage("Login होत आहे...");
+  try{
+    const credential=await auth.signInWithEmailAndPassword(email,password);
+    if(credential.user.uid!==ADMIN_UID){
+      await auth.signOut();
+      setAuthMessage("या खात्याला Admin परवानगी नाही.");
+      return;
+    }
+    document.getElementById("loginPassword").value="";
+    setAuthMessage("Admin Login यशस्वी झाले. Admin Panel वापरू शकता.");
+    goTab("admin");
+  }catch(err){
+    console.error(err);
+    setAuthMessage("Login अयशस्वी. Email आणि Password तपासा.");
+  }
+});
+
+async function logoutAdmin(){
+  try{await auth.signOut();setAuthMessage("Logout झाले.");goTab("live");}
+  catch(err){console.error(err);alert("Logout करताना अडचण आली.");}
+}
+
+auth.onAuthStateChanged(user=>{
+  isAdmin=!!(user && user.uid===ADMIN_UID);
+  if(user && !isAdmin){
+    setAuthMessage("हे खाते Admin नाही. Admin परवानगी नाही.");
+  }else if(isAdmin){
+    setAuthMessage("Admin म्हणून Login आहात.");
+  }else{
+    setAuthMessage("Admin Login केल्यावर Admin Panel उपलब्ध होईल.");
+  }
+  updateAdminVisibility();
+  if(unsubscribeLive){unsubscribeLive();unsubscribeLive=null;}
+  dataReady=false;
+  unsubscribeLive=liveDoc.onSnapshot(async snap=>{
+    if(snap.exists){
+      applyingRemote=true;
+      data=snap.data();
+      if(!Array.isArray(data.teams))data.teams=[];
+      if(!Array.isArray(data.matches))data.matches=[];
+      data.teams.forEach(t=>{if(!Array.isArray(t.players))t.players=[];});
+      data.matches.forEach(m=>{if(!Array.isArray(m.players))m.players=[];});
+      data.nextTeam=data.nextTeam||data.teams.length+1;
+      data.nextMatch=data.nextMatch||data.matches.length+1;
+      localStorage.setItem(KEY,JSON.stringify(data));
+      renderAll();
+      applyingRemote=false;
+      dataReady=true;
+    }else{
+      dataReady=true;
+      if(isAdmin){
+        try{await liveDoc.set(data);}catch(err){console.error("Initial Firestore write:",err);setAuthMessage("Database मध्ये पहिला डेटा सेव्ह झाला नाही. Firestore Rules तपासा.");}
+      }else{
+        data=blankData();renderAll();
+      }
+    }
+  },err=>{
+    console.error("Firestore listener error:",err);
+    setAuthMessage("Database शी संपर्क होत नाही. Internet आणि Firestore Rules तपासा.");
+  });
+});
+
+setInterval(tick,1000);
+renderAll();
+</script>
+</body>
+</html>
